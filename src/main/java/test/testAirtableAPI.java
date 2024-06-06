@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 //import javax.json.JsonObjectBuilder;
 import javax.json.JsonWriter;
 
@@ -20,27 +21,28 @@ public class testAirtableAPI {
 		AirtableAPIRequest airtableReq = new AirtableAPIRequest();
 		
 		// Create JSON object for the new record
-        JsonObject jsonBody = Json.createObjectBuilder()
-                .add("fields", Json.createObjectBuilder()
-                        .add("Name", "Linh")
-                        .add("Age", 19)
-                        .build())
-                .add("fields", Json.createObjectBuilder()
-                        .add("Name", "Nhi")
-                        .add("Age", 19)
-                        .build())
-                .build();
+//        JsonObject jsonBody = Json.createObjectBuilder()
+//                .add("fields", Json.createObjectBuilder()
+//                        .add("Name", "Linh")
+//                        .add("Age", 19)
+//                        .build())
+//                .add("fields", Json.createObjectBuilder()
+//                        .add("Name", "Nhi")
+//                        .add("Age", 19)
+//                        .build())
+//                .build();
         
-        // Another way to create JSON object for the new record
-//        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
-//        jsonBuilder.add("fields", Json.createObjectBuilder()
-//                .add("Name", "Linh")
-//                .add("Age", 19)
-//                .build());
-//        jsonBuilder.add("fields", Json.createObjectBuilder()
-//                .add("Name", "Nhi")
-//                .add("Age", 19)
-//                .build());
+      // Another way to create JSON object for the new record
+      JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+      jsonBuilder.add("fields", Json.createObjectBuilder()
+              .add("Name", "Linh")
+              .add("Age", 19)
+              .build());
+      jsonBuilder.add("fields", Json.createObjectBuilder()
+              .add("Name", "Nhi")
+              .add("Age", 19)
+              .build());
+      JsonObject jsonBody = jsonBuilder.build();
         
         // Convert JSON object to string
         StringWriter stringWriter = new StringWriter();
@@ -66,9 +68,7 @@ public class testAirtableAPI {
 	public void listRecords() {
 		HttpClient client = HttpClient.newHttpClient();
 		
-		AirtableAPIRequest airtableReq = new AirtableAPIRequest();
-        
-		HttpRequest getRequest = airtableReq.getRequest();
+		HttpRequest getRequest = new AirtableAPIRequest().getRequest();
 		
 		try {
 			HttpResponse<String> response = client.send(getRequest, HttpResponse.BodyHandlers.ofString());

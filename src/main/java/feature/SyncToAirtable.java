@@ -1,43 +1,107 @@
 package feature;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Scanner;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonWriter;
+
+import request.AirtableAPIRequest;
 import request.GraphAPIRequest;
 
 public class SyncToAirtable {
 	
 	public static void main(String args[]) {
-		
-		
 		SyncToAirtable app = new SyncToAirtable();
-		app.syncMembers();
-		app.syncChannels();
+		GraphAPIRequest gReq = new GraphAPIRequest();
+		AirtableAPIRequest aReq = new AirtableAPIRequest();
+		
+		// PART 0: enter necessary inputs
+		getInput(gReq, aReq);
+		
+		// MAIN PART: syncMembers (1) and syncChannels (2)
+		for (int i = 1; i <= 2; i++) {
+			gReq.setOption(i);
+			aReq.setOption(i);
+			app.sync(gReq, aReq);
+		}
+		
 		System.out.print("Finish!");
 	}
 
-	private void syncChannels() {
-		// TODO Auto-generated method stub
+	private void sync(GraphAPIRequest gReq, AirtableAPIRequest aReq) {
+		try{
+			HttpClient client = HttpClient.newHttpClient();
 		
-	}
-
-	private void syncMembers() {
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest getRequest = new GraphAPIRequest().getRequest();
-		try {
-			HttpResponse<String> response = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
-			// Print response status code and body
-            System.out.println("Response Code: " + response.statusCode());
-            System.out.println("Response Body: " + response.body());
+			// PART 1: send getRequest to Team 
+			HttpRequest getRequest = gReq.getRequest();
+			HttpResponse<String> teamResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
+			showResponseStatus(teamResponse);
+			
+	        // PART 2: extract specific data (channels) and create a requestBody
+			JsonObject jsonMembers = new JsonExtractor().extractChannels(teamResponse);
+			String requestBody = convertToStr(jsonMembers);
+	        
+	        // PART 3: send postRequest to Airtable
+	        HttpRequest postRequest = aReq.postRequest(requestBody);
+	        HttpResponse<String> airtableResponse = client.send(postRequest, HttpResponse.BodyHandlers.ofString());
+	        showResponseStatus(airtableResponse);
 		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();	
-		} 
-		
-		
-		
-		
+			e.printStackTrace();
+		}
 		
 	}
+	
+	private static void showResponseStatus(HttpResponse<String> response) {
+		System.out.println("Response Code: " + response.statusCode());
+        System.out.println("Response Body: " + response.body());
+	}
+	
+	private static String convertToStr(JsonObject jsonObject) {
+		StringWriter stringWriter = new StringWriter();
+        try (JsonWriter jsonWriter = Json.createWriter(stringWriter)) {jsonWriter.write(jsonObject);}
+        String requestBody = stringWriter.toString();
+        return requestBody;
+	}
+	
+	private static void getInput(GraphAPIRequest gReq, AirtableAPIRequest aReq) {
+		Scanner inp = new Scanner(System.in);
+		
+		System.out.print("Please enter BASE_ID: ");
+		try {
+			String i = inp.nextLine();
+			aReq.setBASE_ID(i);
+			
+		} catch (IllegalArgumentException e) {
+			System.err.println("Error");
+		}
+		
+		System.out.print("Please enter memberTableId: ");
+		try {
+			aReq.setMemberTableId(inp.nextLine());
+		} catch (IllegalArgumentException e) {
+			System.err.println("Error");
+		}
+		
+		System.out.print("Please enter channelTableId: ");
+		try {
+			aReq.setChannelTableId(inp.nextLine());
+		} catch (IllegalArgumentException e) {
+			System.err.println("Error");
+		}
+		
+		System.out.print("Please enter Airtable API Key: ");
+		aReq.setAPI_KEY(inp.nextLine());
+		
+		System.out.print("Please enter TeamId: ");
+		gReq.setTeamId(inp.nextLine());
 
+		System.out.print("Please enter Graph ACCESS_TOKEN: ");
+		gReq.setACCESS_TOKEN(inp.nextLine());
+	}
 }
