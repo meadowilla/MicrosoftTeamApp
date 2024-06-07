@@ -18,17 +18,17 @@ public class JsonExtractor {
         JsonObject jsonTeamResponse = reader.readObject();
         JsonArray values = jsonTeamResponse.getJsonArray("value");
         
-        JsonArrayBuilder members = Json.createArrayBuilder();
+        JsonArrayBuilder members = Json.createArrayBuilder();        
         for (int i = 0; i < values.size(); i++) {
         	JsonObject value = values.getJsonObject(i);
         	JsonObjectBuilder member = Json.createObjectBuilder()
         			.add("fields", Json.createObjectBuilder()
         					.add("displayName", value.getString("displayName"))
-//                          .add("visibleHistoryStartDataTime", value.getString("visibleHistoryStartDataTime"))
+//        					.add("visibleHistoryStartDataTime", value.getString("visibleHistoryStartDataTime"))
                 			.add("userId", value.getString("userId"))
                 			.add("email", value.getString("email"))
                 			.add("tenantId", value.getString("tenantId"))
-//                          .add("role", value.getString("role"))
+                			.add("roles", (value.getJsonArray("roles").isEmpty())? "": value.getJsonArray("roles").getString(0))
                 			);
         	members.add(member);
         }
@@ -53,7 +53,7 @@ public class JsonExtractor {
         					.add("displayName", value.getString("displayName"))
         					.add("createdDateTime", value.getString("createdDateTime"))
                 			.add("id", value.getString("id"))
-                			.add("description", (value.get("description")== JsonValue.NULL)? " ":value.getString("description"))
+                			.add("description", (value.get("description")== JsonValue.NULL)? "":value.getString("description"))
                 			);
         	channels.add(channel);
         }

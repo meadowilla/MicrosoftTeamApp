@@ -59,8 +59,10 @@ public class AirtableAPIRequest extends Request{
 		switch(option) {
 			case 1: // members
 				this.TABLE_ID = this.memberTableId;
+				break;
 			case 2: // channels
-				this.TABLE_ID = this.channelTableId;			
+				this.TABLE_ID = this.channelTableId;		
+				break;
 		}
 	}
 	

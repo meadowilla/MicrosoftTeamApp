@@ -10,7 +10,7 @@
 		<!-- JSON API -->
 		<groupId>javax.json</groupId>
     	<artifactId>javax.json-api</artifactId>
-    	<version>1.0</version>
+    	<version>1.1.4</version>
 	</dependency>
 	<!-- JSON Implementation by Glassfish -->
     <dependency>
@@ -18,6 +18,6 @@
         <artifactId>javax.json</artifactId>
         <version>1.1.4</version>
     </dependency>
-	
+    
   </dependencies>
 </project>

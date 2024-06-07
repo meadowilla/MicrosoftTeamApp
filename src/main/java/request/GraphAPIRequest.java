@@ -14,6 +14,8 @@ public class GraphAPIRequest extends Request{
 	
 	@Override
 	public HttpRequest postRequest(String bodyString) {
+		// add new members to team
+		URL = "https://graph.microsoft.com/v1.0/teams/" + teamId + "/members/add";
 		
 		BodyPublisher requestBody = BodyPublishers.ofString(bodyString);
 		HttpRequest request = HttpRequest.newBuilder()
@@ -30,8 +32,10 @@ public class GraphAPIRequest extends Request{
 		switch (option) {
 			case 1: // get members
 				URL = "https://graph.microsoft.com/v1.0/teams/" + teamId + "/members";
+				break;
 			case 2: // get channels
 				URL = "https://graph.microsoft.com/v1.0/teams/" + teamId + "/channels";
+				break;
 		}
 		
 		HttpRequest request = HttpRequest.newBuilder()
@@ -53,5 +57,9 @@ public class GraphAPIRequest extends Request{
 	
 	public void setOption(int option) {
 		this.option = option;
+	}
+	
+	public int getOption() {
+		return option;
 	}
 }

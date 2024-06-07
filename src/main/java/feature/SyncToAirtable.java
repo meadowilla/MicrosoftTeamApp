@@ -6,6 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -17,21 +19,29 @@ import request.GraphAPIRequest;
 public class SyncToAirtable {
 	
 	public static void main(String args[]) {
-		SyncToAirtable app = new SyncToAirtable();
-		GraphAPIRequest gReq = new GraphAPIRequest();
-		AirtableAPIRequest aReq = new AirtableAPIRequest();
+		Timer timer = new Timer();
+		TimerTask syncToAirtable = new TimerTask() {
+			@Override
+			public void run() {
+				SyncToAirtable app = new SyncToAirtable();
+				GraphAPIRequest gReq = new GraphAPIRequest();
+				AirtableAPIRequest aReq = new AirtableAPIRequest();
+				
+				// PART 0: enter necessary inputs
+				getInput(gReq, aReq);
+				
+				// MAIN PART: syncMembers (1) and syncChannels (2)
+				for (int i = 1; i < 3; i++) {
+					gReq.setOption(i);
+					aReq.setOption(i);
+					app.sync(gReq, aReq);
+				}
+				
+				System.out.print("Finish!");
+			}
+		};
 		
-		// PART 0: enter necessary inputs
-		getInput(gReq, aReq);
-		
-		// MAIN PART: syncMembers (1) and syncChannels (2)
-		for (int i = 1; i <= 2; i++) {
-			gReq.setOption(i);
-			aReq.setOption(i);
-			app.sync(gReq, aReq);
-		}
-		
-		System.out.print("Finish!");
+		timer.scheduleAtFixedRate(syncToAirtable, 0, 3600000);
 	}
 
 	private void sync(GraphAPIRequest gReq, AirtableAPIRequest aReq) {
@@ -40,13 +50,23 @@ public class SyncToAirtable {
 		
 			// PART 1: send getRequest to Team 
 			HttpRequest getRequest = gReq.getRequest();
+			System.out.println(getRequest);
 			HttpResponse<String> teamResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
 			showResponseStatus(teamResponse);
 			
-	        // PART 2: extract specific data (channels) and create a requestBody
-			JsonObject jsonMembers = new JsonExtractor().extractChannels(teamResponse);
-			String requestBody = convertToStr(jsonMembers);
-	        
+	        // PART 2: extract specific data (members/channels) and create a requestBody
+			String requestBody = "";
+			switch (gReq.getOption()) {
+			case 1:
+				JsonObject jsonMembers = new JsonExtractor().extractMembers(teamResponse);
+				requestBody = convertToStr(jsonMembers);
+				break;
+			case 2:
+				JsonObject jsonChannels = new JsonExtractor().extractChannels(teamResponse);
+				requestBody = convertToStr(jsonChannels);
+				break;
+			}
+
 	        // PART 3: send postRequest to Airtable
 	        HttpRequest postRequest = aReq.postRequest(requestBody);
 	        HttpResponse<String> airtableResponse = client.send(postRequest, HttpResponse.BodyHandlers.ofString());
