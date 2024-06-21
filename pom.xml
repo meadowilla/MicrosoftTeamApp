@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>hust.soict.cyber.project1</groupId>
+  <artifactId>MicrosoftTeamManagementApp</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  <dependencies>
+	
+	<dependency>
+		<!-- JSON API -->
+		<groupId>javax.json</groupId>
+    	<artifactId>javax.json-api</artifactId>
+    	<version>1.1.4</version>
+	</dependency>
+	<!-- JSON Implementation by Glassfish -->
+    <dependency>
+        <groupId>org.glassfish</groupId>
+        <artifactId>javax.json</artifactId>
+        <version>1.1.4</version>
+    </dependency>
+    
+  </dependencies>
+</project>
