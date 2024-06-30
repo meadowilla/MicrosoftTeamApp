@@ -26,8 +26,8 @@ public class GraphAPIRequest extends Request{
         case 3: // add new members to channel
             URL = "https://graph.microsoft.com/v1.0/teams/" + teamId + "/channels/" + channelId + "/members";
             break;
-        default:
-            throw new IllegalArgumentException("Invalid option: " + option);
+//        default:
+//            throw new IllegalArgumentException("Invalid option: " + option);
 		}
 		
 		BodyPublisher requestBody = BodyPublishers.ofString(bodyString);
@@ -52,8 +52,8 @@ public class GraphAPIRequest extends Request{
 			case 3: // get teams
 				URL = "https://graph.microsoft.com/v1.0/joinedTeams";
                 break;
-            default:
-                throw new IllegalArgumentException("Invalid option: " + option);
+//            default:
+//                throw new IllegalArgumentException("Invalid option: " + option);
 		}
 		
 		HttpRequest request = HttpRequest.newBuilder()

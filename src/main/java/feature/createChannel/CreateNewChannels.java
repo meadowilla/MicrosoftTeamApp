@@ -1,4 +1,4 @@
-package feature;
+package feature.createChannel;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -11,16 +11,52 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
 
+import entity.Owner;
+import feature.AccessTokenGetter;
 import request.GraphAPIRequest;
 
 public class CreateNewChannels {
+	public CreateNewChannels(String teamId, String displayName, String description, String membershipType, Owner owner) {
+		GraphAPIRequest gReq = new GraphAPIRequest();
+		
+		gReq.setTeamId(teamId);
+		gReq.setACCESS_TOKEN(owner.getAccessToken());
+		gReq.setOption(2);
+		
+		try{
+            // HttpClient is used to send all requests
+            HttpClient client = HttpClient.newHttpClient();
+            
+            // Part 1: create channel
+            JsonObject jsonObject = Json.createObjectBuilder()
+        
+                .add("displayName", displayName)
+                .add("description", description)
+                .add("membershipType", membershipType)
+                .build();
+        
+            // Convert JSON object into string
+            StringWriter stringWriter = new StringWriter();
+            try(JsonWriter jsonWriter = Json.createWriter(stringWriter)){
+                jsonWriter.write(jsonObject);
+            }
+            String requestBody = stringWriter.toString();
+        
+            // Part 2: send post request to add new channels to team
+            HttpRequest postRequest = gReq.postRequest(requestBody);
+			HttpResponse<String> teamResponse = client.send(postRequest, HttpResponse.BodyHandlers.ofString());
+			showResponseStatus(teamResponse);
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void main(String[] args){
 
         //Part 0: enter neccessary inputs
-        GraphAPIRequest gRep = new GraphAPIRequest();
-        getInput(gRep);
-        gRep.setOption(2); 
+        GraphAPIRequest gReq = new GraphAPIRequest();
+        getInput(gReq);
+        gReq.setOption(2); 
         try{
             // HttpClient is used to send all requests
             HttpClient client = HttpClient.newHttpClient();
@@ -41,7 +77,7 @@ public class CreateNewChannels {
             String requestBody = stringWriter.toString();
         
             // Part 2: send post request to add new channels to team
-            HttpRequest postRequest = gRep.postRequest(requestBody);
+            HttpRequest postRequest = gReq.postRequest(requestBody);
 			HttpResponse<String> teamResponse = client.send(postRequest, HttpResponse.BodyHandlers.ofString());
 			showResponseStatus(teamResponse);
 		} catch (IOException | InterruptedException e) {
@@ -58,8 +94,8 @@ public class CreateNewChannels {
 		System.out.print("Please enter TeamId: ");
 		gReq.setTeamId(inp.nextLine());
 
-		System.out.print("Please enter Graph ACCESS_TOKEN: ");
-		gReq.setACCESS_TOKEN(inp.nextLine());
+//		gReq.setACCESS_TOKEN(new AccessTokenGetter().get());
+//		System.out.println("Getting Graph ACCESS_TOKEN...");
 	}
 
 }

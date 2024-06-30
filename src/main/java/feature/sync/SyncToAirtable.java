@@ -1,4 +1,4 @@
-package feature;
+package feature.sync;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -13,35 +13,78 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
 
+import entity.Owner;
+import feature.AccessTokenGetter;
+import feature.JsonExtractor;
 import request.AirtableAPIRequest;
 import request.GraphAPIRequest;
 
 public class SyncToAirtable {
-	
-	public static void main(String [] args) {
+	public SyncToAirtable() {}
+	public SyncToAirtable(String teamId, String baseId, String memberTableId, String channelTableId, String airtableAPIkey, int period, Owner owner) {
+		GraphAPIRequest gReq = new GraphAPIRequest();
+		AirtableAPIRequest aReq = new AirtableAPIRequest();
+		
+		gReq.setTeamId(teamId);
+		gReq.setACCESS_TOKEN(owner.getAccessToken());
+		aReq.setBASE_ID(baseId);
+		aReq.setMemberTableId(memberTableId);
+		aReq.setChannelTableId(channelTableId);
+		aReq.setAPI_KEY(airtableAPIkey);
+		
 		Timer timer = new Timer();
 		TimerTask syncToAirtable = new TimerTask() {
 			@Override
 			public void run() {
-				SyncToAirtable app = new SyncToAirtable();
-				GraphAPIRequest gReq = new GraphAPIRequest();
-				AirtableAPIRequest aReq = new AirtableAPIRequest();
-				
-				// PART 0: enter necessary inputs
-				getInput(gReq, aReq);
-				
 				// MAIN PART: syncMembers (1) and syncChannels (2)
 				for (int i = 1; i < 3; i++) {
 					gReq.setOption(i);
 					aReq.setOption(i);
-					app.sync(gReq, aReq);
+					if (i == 1) {
+						System.out.println("#### SYNC MEMBERS ####");
+					} else {
+						System.out.println("#### SYNC CHANNELS ####");
+					}
+					sync(gReq, aReq);
 				}
 				
-				System.out.print("Finish!");
+				System.out.println("Finish! Let check your Airtable!"); // provide a link to the Airtable
 			}
 		};
 		
-		timer.scheduleAtFixedRate(syncToAirtable, 0, 3600000);
+		timer.scheduleAtFixedRate(syncToAirtable, 0, period);
+		
+	}
+	
+	public static void main(String [] args) {
+		SyncToAirtable app = new SyncToAirtable();
+		GraphAPIRequest gReq = new GraphAPIRequest();
+		AirtableAPIRequest aReq = new AirtableAPIRequest();
+		
+		// PART 0: enter necessary inputs
+		getInput(gReq, aReq);
+		
+		Timer timer = new Timer();
+		TimerTask syncToAirtable = new TimerTask() {
+			@Override
+			public void run() {
+				// MAIN PART: syncMembers (1) and syncChannels (2)
+				for (int i = 1; i < 3; i++) {
+					gReq.setOption(i);
+					aReq.setOption(i);
+					if (i == 1) {
+						System.out.println("#### SYNC MEMBERS ####");
+					} else {
+						System.out.println("#### SYNC CHANNELS ####");
+					}
+					app.sync(gReq, aReq);
+				}
+				
+				System.out.println("Finish! Let check your Airtable!"); // provide a link to the Airtable
+			}
+		};
+		
+		timer.scheduleAtFixedRate(syncToAirtable, 0, 36000);
 	}
 
 	private void sync(GraphAPIRequest gReq, AirtableAPIRequest aReq) {
@@ -50,9 +93,9 @@ public class SyncToAirtable {
 		
 			// PART 1: send getRequest to Team 
 			HttpRequest getRequest = gReq.getRequest();
-			System.out.println(getRequest);
+			System.out.println("Get data from Team ...");
 			HttpResponse<String> teamResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
-			showResponseStatus(teamResponse);
+//			showResponseStatus(teamResponse);
 			
 	        // PART 2: extract specific data (members/channels) and create a requestBody
 			String requestBody = "";
@@ -69,8 +112,9 @@ public class SyncToAirtable {
 
 	        // PART 3: send postRequest to Airtable
 	        HttpRequest postRequest = aReq.postRequest(requestBody);
+	        System.out.println("Send data to Airtable ...");
 	        HttpResponse<String> airtableResponse = client.send(postRequest, HttpResponse.BodyHandlers.ofString());
-	        showResponseStatus(airtableResponse);
+//	        showResponseStatus(airtableResponse);
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -121,8 +165,8 @@ public class SyncToAirtable {
 		System.out.print("Please enter TeamId: ");
 		gReq.setTeamId(inp.nextLine());
 
-		System.out.print("Getting Graph ACCESS_TOKEN...");
-		gReq.setACCESS_TOKEN(new GetAccessToken().get());
+//		gReq.setACCESS_TOKEN(new AccessTokenGetter().get());
+//		System.out.println("Getting Graph ACCESS_TOKEN...");
 //		gReq.setACCESS_TOKEN(inp.nextLine());
 		System.out.println("Successful!");
 	}
