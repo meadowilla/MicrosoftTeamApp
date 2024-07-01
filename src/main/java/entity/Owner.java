@@ -11,6 +11,7 @@ import feature.JsonExtractor;
 
 public class Owner{
 	private String accessToken;
+	public Owner() {}
 
     public Owner(String tenantId, String clientId, String clientSecret) {
     	HttpClient client = HttpClient.newHttpClient();
@@ -58,6 +59,10 @@ public class Owner{
     
     public String getAccessToken() {
     	return this.accessToken;
+    }
+    
+    public void setAccessToken(String accessToken) {
+    	this.accessToken = accessToken;
     }
 
 }

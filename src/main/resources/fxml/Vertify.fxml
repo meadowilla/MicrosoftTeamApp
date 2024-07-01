@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Verify">
+   <top>
+      <Label alignment="CENTER" prefHeight="63.0" prefWidth="600.0" style="-fx-background-color: pink;" text="Microsoft Team Management" textFill="#2b2627" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+   </top>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="VertifyButton" layoutX="235.0" layoutY="251.0" mnemonicParsing="false" onAction="#VertifyButtonClicked" style="-fx-background-color: #F19ED2;" text="Vertify" textFill="#bd1936">
+               <font>
+                  <Font name="System Italic" size="18.0" />
+               </font>
+            </Button>
+            <Label layoutX="109.0" layoutY="183.0" text="SecreteID">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="114.0" layoutY="125.0" text="ClientID">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="110.0" layoutY="63.0" text="TenantID">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="ClientIDButton" layoutX="228.0" layoutY="126.0" onKeyTyped="#validateClientIDTyped" prefHeight="25.0" prefWidth="282.0" />
+            <TextField fx:id="TenantIDButton" layoutX="229.0" layoutY="64.0" onKeyTyped="#validateTenantIDTyped" prefHeight="25.0" prefWidth="277.0" />
+            <TextField fx:id="SecreteIDButton" layoutX="230.0" layoutY="184.0" onKeyTyped="#validateSecreteIDTyped" prefHeight="25.0" prefWidth="283.0" />
+            <Label fx:id="tenantIDError" layoutX="230.0" layoutY="97.0" prefHeight="17.0" prefWidth="277.0" />
+            <Label fx:id="clientIDError" layoutX="230.0" layoutY="159.0" prefHeight="17.0" prefWidth="277.0" />
+            <Label fx:id="secreteIDError" layoutX="230.0" layoutY="221.0" prefHeight="17.0" prefWidth="284.0" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

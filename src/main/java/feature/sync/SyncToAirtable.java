@@ -9,12 +9,11 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonWriter;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonWriter;
 
 import entity.Owner;
-import feature.AccessTokenGetter;
 import feature.JsonExtractor;
 import request.AirtableAPIRequest;
 import request.GraphAPIRequest;

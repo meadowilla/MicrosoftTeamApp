@@ -18,7 +18,7 @@ public class AccessTokenGetter {
 	private String accessToken;
 
 //	public static void main(String [] args) {
-	public String get(String tenantId, String clientId, String clientSecret) {
+	public String get() {
 		AccessTokenGetter getter = new AccessTokenGetter();
 		
 		getter.getInput();

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.TeamsController">
+    <center>
+        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+                <MenuBar accessibleRole="BUTTON" prefHeight="33.0" prefWidth="600.0">
+                    <menus>
+                        <Menu fx:id="FileButton" mnemonicParsing="false" text="Option">
+                            <items>
+                                <MenuItem fx:id="CreateChannelButton" mnemonicParsing="false" onAction="#CreateChannelClicked" text="CreateChannel" />
+                                <Menu mnemonicParsing="false" text="AddMembers">
+                                    <items>
+                                        <MenuItem fx:id="ToChannelButton" mnemonicParsing="false" onAction="#ToChannelButtonClicked" text="ToChannel" />
+                              <MenuItem fx:id="ToTeamFromCSVButton" mnemonicParsing="false" onAction="#ToTeamFromCSVButtonClicked" text="ToTeamFromCSV" />
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="SyncToAirtable">
+                                    <items>
+                                        <MenuItem fx:id="MembersButton" mnemonicParsing="false" onAction="#MembersButtonClicked" text="Members" />
+                                        <MenuItem fx:id="ChannelsButton" mnemonicParsing="false" onAction="#ChannelsButtonClicked" text="Channels" />
+                                        <MenuItem fx:id="TeamsButton" mnemonicParsing="false" onAction="#TeamsButtonClicked" text="Teams" />
+                                    </items>
+                                </Menu>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="About" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Edit">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Delete" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+         </children>
+        </VBox>
+    </center>
+    <top>
+        <Label fx:id="lbl" alignment="CENTER" prefHeight="63.0" prefWidth="600.0" style="-fx-background-color: pink;" text="Microsoft Team Management" textFill="#404048" BorderPane.alignment="CENTER">
+            <font>
+                <Font name="System Bold" size="20.0" />
+            </font>
+        </Label>
+    </top>
+</BorderPane>
